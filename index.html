@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pizarra Digital - Colegio Montano | Protección a Niños y Adolescentes</title>
+    <!-- Tailwind CSS para diseño responsivo y moderno -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome para iconografía educativa -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Configuración de tipografía institucional y colores base */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #F2F5E9;
+            color: #1e293b;
+        }
+
+        /* Paleta de Colores Institucionales Colegio Montano */
+        .bg-montano-blue { background-color: #1269A8; }
+        .text-montano-blue { color: #1269A8; }
+        .border-montano-blue { border-color: #1269A8; }
+
+        .bg-montano-yellow { background-color: #F7D615; }
+        .text-montano-yellow { color: #F7D615; }
+        .border-montano-yellow { border-color: #F7D615; }
+
+        .bg-montano-green-gray { background-color: #54887D; }
+        .text-montano-green-gray { color: #54887D; }
+        .border-montano-green-gray { border-color: #54887D; }
+
+        .bg-montano-light-blue { background-color: #88B5C7; }
+        .bg-montano-olive { background-color: #A6B046; }
+        .bg-montano-canvas { background-color: #F2F5E9; }
+
+        /* Estilos de Pizarra Digital */
+        .pizarra-card {
+            background-color: #ffffff;
+            border: 3px solid #1269A8;
+            border-radius: 1rem;
+            box-shadow: 0 10px 25px -5px rgba(18, 105, 168, 0.15);
+        }
+
+        .tab-btn {
+            transition: all 0.25s ease;
+        }
+        .tab-btn.active {
+            background-color: #1269A8;
+            color: #ffffff;
+            border-bottom: 4px solid #F7D615;
+            transform: translateY(-2px);
+        }
+        .tab-btn:not(.active):hover {
+            background-color: #88B5C7;
+            color: #ffffff;
+        }
+
+        /* Animación suave para cambio de pestañas */
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.35s ease-in-out;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Animación de acierto */
+        @keyframes pulseSuccess {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+        .animate-hit {
+            animation: pulseSuccess 0.4s ease-in-out;
+        }
+
+        /* Estilo para fullscreen */
+        :fullscreen {
+            background-color: #F2F5E9;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col p-2 sm:p-4 md:p-6">
+
+    <!-- CONTENEDOR PRINCIPAL DE LA PIZARRA -->
+    <div id="pizarra-container" class="max-w-7xl w-full mx-auto flex-grow flex flex-col gap-4">
+
+        <!-- ENCABEZADO INSTITUCIONAL -->
+        <header class="bg-montano-blue text-white rounded-2xl p-4 shadow-lg border-b-4 border-montano-yellow flex flex-col xl:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-4">
+                <div class="bg-white p-2 rounded-xl shadow-md flex-shrink-0">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQyEop0yf6lZ7Jk9MILZxF1rBj4Oqs5esyhIQ&s" 
+                         alt="Logo Colegio Montano" 
+                         class="h-14 w-14 sm:h-16 sm:w-16 object-contain"
+                         onerror="this.src='https://placehold.co/80x80/1269A8/F7D615?text=CM'">
+                </div>
+                <div>
+                    <div class="flex items-center gap-2 flex-wrap">
+                        <span class="bg-montano-yellow text-slate-900 text-xs font-extrabold px-2.5 py-0.5 rounded-full uppercase tracking-wider">Colegio Montano</span>
+                        <span class="bg-montano-green-gray text-white text-xs font-semibold px-2.5 py-0.5 rounded-full">Plan No. 5 • Unidad 1</span>
+                    </div>
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold tracking-tight mt-1">Protección a niños y adolescentes</h1>
+                    <p class="text-blue-100 text-xs sm:text-sm flex flex-wrap gap-x-4 gap-y-1 mt-1">
+                        <span><i class="fas fa-book-open mr-1 text-montano-yellow"></i> <strong>Curso:</strong> Ciencias Sociales</span>
+                        <span><i class="fas fa-user-graduate mr-1 text-montano-yellow"></i> <strong>Grado:</strong> 4to Primaria</span>
+                        <span><i class="fas fa-chalkboard-teacher mr-1 text-montano-yellow"></i> <strong>Docente:</strong> Andrea Aguilar</span>
+                        <span><i class="fas fa-calendar-alt mr-1 text-montano-yellow"></i> <strong>Fecha:</strong> Enero 2027</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Temporizador Visual (50 min) + Botón Pantalla Completa -->
+            <div class="flex flex-wrap items-center justify-center sm:justify-end gap-3 w-full xl:w-auto">
+                <!-- Temporizador -->
+                <div class="bg-slate-900/60 backdrop-blur-sm border border-white/25 px-3.5 py-2 rounded-xl flex items-center gap-3">
+                    <div>
+                        <span class="block text-[10px] uppercase tracking-wider text-blue-200 font-semibold">Período (50 min)</span>
+                        <span id="timer-display" class="font-mono font-extrabold text-montano-yellow text-lg sm:text-xl tracking-wider">50:00</span>
+                    </div>
+                    <div class="flex items-center gap-1.5">
+                        <button id="btn-timer-toggle" onclick="toggleTimer()" 
+                                class="bg-montano-green-gray hover:opacity-90 text-white text-xs font-bold px-2.5 py-2 rounded-lg transition cursor-pointer"
+                                title="Iniciar o pausar temporizador">
+                            <i class="fas fa-play" id="timer-icon"></i> <span id="timer-btn-text" class="hidden sm:inline">Iniciar</span>
+                        </button>
+                        <button onclick="resetTimer()" 
+                                class="bg-white/15 hover:bg-white/25 text-white text-xs font-bold px-2.5 py-2 rounded-lg transition cursor-pointer"
+                                title="Reiniciar a 50:00">
+                            <i class="fas fa-redo"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Botón Pantalla Completa -->
+                <button id="btn-fullscreen" onclick="toggleFullScreen()" 
+                        class="bg-montano-yellow hover:bg-yellow-300 text-slate-900 font-bold px-4 py-2.5 rounded-xl shadow-md transition transform active:scale-95 flex items-center gap-2 cursor-pointer"
+                        title="Ampliar pizarra a pantalla completa">
+                    <i class="fas fa-expand" id="fullscreen-icon"></i>
+                    <span id="fullscreen-text">Pantalla Completa</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- PANEL PEDAGÓGICO Y CURRICULAR (DESPLEGABLE) -->
+        <section class="bg-white rounded-2xl border-2 border-montano-green-gray shadow-sm overflow-hidden">
+            <button onclick="toggleCurriculum()" class="w-full px-4 py-3 bg-montano-green-gray text-white font-bold flex items-center justify-between hover:opacity-95 transition cursor-pointer">
+                <span class="flex items-center gap-2 text-sm sm:text-base">
+                    <i class="fas fa-compass text-montano-yellow"></i>
+                    Ficha Pedagógica y Curricular: CNB Guatemala (Protección Integral, PGN, Juzgados de Niñez), Hábitos Montano y Evaluación
+                </span>
+                <i id="curr-chevron" class="fas fa-chevron-down transition-transform duration-300"></i>
+            </button>
+            
+            <div id="curriculum-body" class="hidden p-4 sm:p-5 bg-white grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                <!-- Competencia y Logro CNB -->
+                <div class="p-3.5 rounded-xl bg-blue-50 border-l-4 border-montano-blue">
+                    <h3 class="font-bold text-montano-blue mb-1 flex items-center gap-1.5"><i class="fas fa-bullseye"></i> Competencia y Logro (CNB)</h3>
+                    <p class="text-xs text-slate-700 mb-2"><strong>Competencia:</strong> Reconoce el rol de las instituciones del Estado de Guatemala garantes de la protección y defensa de los derechos de la niñez y la adolescencia.</p>
+                    <p class="text-xs text-slate-700"><strong>Logro de Aprendizaje:</strong> Identifica las funciones de la PGN, los Juzgados de Niñez y Adolescencia y valora las redes de apoyo comunitario para prevenir riesgos y proteger el bienestar infantil.</p>
+                </div>
+
+                <!-- Hábitos Montano y Competencias Clave -->
+                <div class="p-3.5 rounded-xl bg-amber-50 border-l-4 border-montano-yellow">
+                    <h3 class="font-bold text-amber-900 mb-1 flex items-center gap-1.5"><i class="fas fa-seedling text-amber-600"></i> Hábitos Montano y Claves</h3>
+                    <ul class="text-xs text-slate-700 space-y-1">
+                        <li><strong>Poner primero lo primero:</strong> Priorizar la seguridad y protección ante cualquier peligro.</li>
+                        <li><strong>Sinergizar:</strong> Trabajar en red con familia y comunidad.</li>
+                        <li><strong>Buscar primero entender:</strong> Comprender las rutas de denuncia y auxilio.</li>
+                        <li><strong>Competencias clave:</strong> Pensamiento crítico, resolución de problemas, inteligencia emocional, trabajo en equipo y comunicación asertiva.</li>
+                    </ul>
+                </div>
+
+                <!-- Evaluación 3 Momentos -->
+                <div class="p-3.5 rounded-xl bg-emerald-50 border-l-4 border-montano-green-gray">
+                    <h3 class="font-bold text-montano-green-gray mb-1 flex items-center gap-1.5"><i class="fas fa-tasks"></i> Evaluación (3 Momentos)</h3>
+                    <ul class="text-xs text-slate-700 space-y-1">
+                        <li><strong>Inicial (Diagnóstica):</strong> Dinámica de apertura <em>"La red de seguridad invisible"</em>.</li>
+                        <li><strong>Formativa:</strong> Análisis individual de casos con acordeones de autoevaluación guiada y rúbrica cooperativa.</li>
+                        <li><strong>Sumativa:</strong> Lista de cotejo interactiva sobre 10 puntos en plenaria.</li>
+                    </ul>
+                </div>
+
+                <!-- Recursos -->
+                <div class="p-3.5 rounded-xl bg-lime-50 border-l-4 border-montano-olive">
+                    <h3 class="font-bold text-lime-900 mb-1 flex items-center gap-1.5"><i class="fas fa-toolbox text-lime-700"></i> Recursos de la Sesión</h3>
+                    <ul class="text-xs text-slate-700 space-y-1 list-disc list-inside">
+                        <li>Pizarra Digital Interactiva.</li>
+                        <li>Cuaderno de Ciencias Sociales y estuche.</li>
+                        <li>Tarjetas de casos institucionales.</li>
+                        <li>Pliegos de papel y marcadores.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- NAVEGACIÓN DE SECUENCIA DIDÁCTICA (50 MINUTOS) -->
+        <nav class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3" role="tablist">
+            <button onclick="openTab('tab1', this)" class="tab-btn active bg-white text-slate-800 font-bold py-3 px-4 rounded-xl shadow border border-slate-200 flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer">
+                <span class="bg-montano-yellow text-slate-900 text-xs font-extrabold px-2 py-0.5 rounded-md">I • 5 min</span>
+                <span class="text-xs sm:text-sm text-center">Introducción Motivante</span>
+            </button>
+            <button onclick="openTab('tab2', this)" class="tab-btn bg-white text-slate-800 font-bold py-3 px-4 rounded-xl shadow border border-slate-200 flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer">
+                <span class="bg-montano-olive text-white text-xs font-extrabold px-2 py-0.5 rounded-md">II • 15 min</span>
+                <span class="text-xs sm:text-sm text-center">Trabajo Individual</span>
+            </button>
+            <button onclick="openTab('tab3', this)" class="tab-btn bg-white text-slate-800 font-bold py-3 px-4 rounded-xl shadow border border-slate-200 flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer">
+                <span class="bg-montano-green-gray text-white text-xs font-extrabold px-2 py-0.5 rounded-md">III • 20 min</span>
+                <span class="text-xs sm:text-sm text-center">Trabajo Cooperativo</span>
+            </button>
+            <button onclick="openTab('tab4', this)" class="tab-btn bg-white text-slate-800 font-bold py-3 px-4 rounded-xl shadow border border-slate-200 flex flex-col sm:flex-row items-center justify-center gap-2 cursor-pointer">
+                <span class="bg-montano-light-blue text-slate-900 text-xs font-extrabold px-2 py-0.5 rounded-md">IV • 10 min</span>
+                <span class="text-xs sm:text-sm text-center">Plenaria y Cierre</span>
+            </button>
+        </nav>
+
+        <!-- ÁREA PRINCIPAL DE PIZARRA INTERACTIVA -->
+        <main class="pizarra-card p-4 sm:p-6 md:p-8 flex-grow">
+
+            <!-- ========================================== -->
+            <!-- PESTAÑA I: INTRODUCCIÓN MOTIVANTE (5 MIN)  -->
+            <!-- ========================================== -->
+            <div id="tab1" class="tab-content active space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-slate-100 pb-4 gap-2">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-montano-green-gray">Momento 1 • Dinámica Rápida "El Escudo Protector de la Comunidad"</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-montano-blue">¿Quién nos protege cuando nuestros derechos están en riesgo?</h2>
+                    </div>
+                    <div class="bg-montano-yellow/30 border border-montano-yellow px-4 py-2 rounded-xl font-bold text-slate-800 text-sm self-start sm:self-center">
+                        <i class="fas fa-stopwatch text-montano-blue mr-1"></i> Tiempo: 5 minutos
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                    <!-- Situación Problema -->
+                    <div class="lg:col-span-6 bg-gradient-to-br from-blue-50 to-sky-100 border-2 border-montano-light-blue rounded-2xl p-5 sm:p-6 shadow-inner space-y-4">
+                        <div class="flex items-center gap-2">
+                            <span class="bg-montano-blue text-white text-xs font-extrabold px-3 py-1 rounded-full uppercase">
+                                <i class="fas fa-shield-alt text-montano-yellow mr-1"></i> Situación Problema: Alerta en el Vecindario
+                            </span>
+                        </div>
+                        <div class="bg-white p-5 rounded-xl border-l-8 border-montano-yellow shadow-sm text-sm sm:text-base leading-relaxed text-slate-800 space-y-2.5">
+                            <p>
+                                En una colonia cercana, los vecinos notan que un niño pequeño camina solo todas las noches sin abrigo ni supervisión, buscando comida en la calle.
+                            </p>
+                            <p>
+                                Doña Carmen, una vecina preocupada, recuerda que <strong>no basta con solo mirar</strong>, sino que en Guatemala existen instituciones y leyes creadas específicamente para intervenir, rescatar y proteger a la niñez en situaciones de vulnerabilidad.
+                            </p>
+                        </div>
+                        <div class="bg-white/85 p-3.5 rounded-xl border border-blue-200 flex items-start gap-3">
+                            <i class="fas fa-lightbulb text-montano-yellow text-xl mt-0.5"></i>
+                            <p class="text-xs sm:text-sm text-slate-700">
+                                <strong>Enfoque Montano:</strong> Aplicar el hábito <em>Poner primero lo primero</em> significa actuar con prontitud y responsabilidad cuando la integridad de un menor está en peligro.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- 3 Preguntas Exploratorias Interactivas -->
+                    <div class="lg:col-span-6 space-y-3">
+                        <h3 class="font-extrabold text-lg text-slate-800 flex items-center gap-2">
+                            <i class="fas fa-comments text-montano-blue"></i> 3 Preguntas Exploratorias (Activación de Saberes):
+                        </h3>
+                        
+                        <div class="p-4 rounded-xl bg-amber-50 border-l-4 border-montano-yellow shadow-sm cursor-pointer hover:bg-amber-100/70 transition" onclick="toggleSolution('hint-q1')">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-extrabold text-amber-800 uppercase">Pregunta 1 • Rol Vecinal</span>
+                                <span class="text-[11px] text-amber-700 font-bold"><i class="fas fa-eye mr-1"></i>Clic para pista</span>
+                            </div>
+                            <p class="text-slate-800 font-semibold text-sm sm:text-base mt-1">¿Qué debería hacer Doña Carmen para ayudar al niño de forma correcta y segura?</p>
+                            <p id="hint-q1" class="hidden mt-2 text-xs text-amber-900 bg-white/80 p-2 rounded-lg">
+                                <strong>Pista:</strong> Informar inmediatamente a las autoridades competentes (como la Procuraduría General de la Nación o la Policía Nacional Civil) en lugar de ignorar la situación.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-sky-50 border-l-4 border-montano-blue shadow-sm cursor-pointer hover:bg-sky-100/70 transition" onclick="toggleSolution('hint-q2')">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-extrabold text-montano-blue uppercase">Pregunta 2 • Instituciones del Estado</span>
+                                <span class="text-[11px] text-montano-blue font-bold"><i class="fas fa-eye mr-1"></i>Clic para pista</span>
+                            </div>
+                            <p class="text-slate-800 font-semibold text-sm sm:text-base mt-1">¿Conoces el nombre de alguna institución en Guatemala que se encargue de proteger a los niños?</p>
+                            <p id="hint-q2" class="hidden mt-2 text-xs text-slate-800 bg-white/80 p-2 rounded-lg">
+                                <strong>Pista:</strong> La PGN (Procuraduría General de la Nación), los Juzgados de Niñez y Adolescencia, y la PDH.
+                            </p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-emerald-50 border-l-4 border-montano-green-gray shadow-sm cursor-pointer hover:bg-emerald-100/70 transition" onclick="toggleSolution('hint-q3')">
+                            <div class="flex justify-between items-center">
+                                <span class="text-xs font-extrabold text-montano-green-gray uppercase">Pregunta 3 • Responsabilidad Ciudadana</span>
+                                <span class="text-[11px] text-montano-green-gray font-bold"><i class="fas fa-eye mr-1"></i>Clic para pista</span>
+                            </div>
+                            <p class="text-slate-800 font-semibold text-sm sm:text-base mt-1">¿Por qué la protección de la niñez no es solo tarea de la familia, sino de toda la sociedad?</p>
+                            <p id="hint-q3" class="hidden mt-2 text-xs text-emerald-900 bg-white/80 p-2 rounded-lg">
+                                <strong>Pista:</strong> Porque los niños son el futuro de la nación y merecen crecer en entornos seguros donde todos debemos velar por su bienestar.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- PESTAÑA II: TRABAJO INDIVIDUAL (15 MIN)    -->
+            <!-- ========================================== -->
+            <div id="tab2" class="tab-content space-y-6">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between border-b-2 border-slate-100 pb-4 gap-2">
+                    <div>
+                        <span class="text-xs font-extrabold uppercase tracking-wider text-montano-olive">Momento 2 • Síntesis Teórica y Análisis Individual</span>
+                        <h2 class="text-2xl sm:text-3xl font-extrabold text-montano-blue">Instituciones Garantes: PGN y Juzgados de Niñez</h2>
+                    </div>
+                    <div class="bg-montano-olive/20 border border-montano-olive px-4 py-2 rounded-xl font-bold text-slate-800 text-sm self-start sm:self-center">
+                        <i class="fas fa-stopwatch text-montano-olive mr-1"></i> Tiempo: 15 minutos
+                    </div>
+                </div>
+
+                <!-- Síntesis Teórica -->
+                <div class="bg-gradient-to-r from-blue-50 via-white to-emerald-50 border-2 border-montano-light-blue rounded-2xl p-4 sm:p-5 space-y-3">
+                    <p class="text-xs sm:text-sm text-slate-800 leading-relaxed">
+                        En Guatemala, cuando los derechos de un niño o adolescente son amenazados o vulnerados, el Estado cuenta con entidades oficiales especializadas que velan por su integridad física y emocional:
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+                        <div class="bg-white p-3.5 rounded-xl border-l-4 border-montano-blue shadow-sm">
+                            <strong class="text-montano-blue block mb-1 font-extrabold"><i class="fas fa-balance-scale mr-1"></i> 1. PGN (Procuraduría General de la Nación)</strong>
+                            Institución que representa y protege legalmente los intereses de la niñez desamparada o en riesgo, dictando medidas de protección urgentes.
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border-l-4 border-montano-green-gray shadow-sm">
+                            <strong class="text-montano-green-gray block mb-1 font-extrabold"><i class="fas fa-gavel mr-1"></i> 2. Juzgados de Niñez y Adolescencia</strong>
+                            Tribunales especializados del Organismo Judicial que resuelven situaciones legales y garantizan los derechos de menores en conflicto o riesgo.
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border-l-4 border-montano-yellow shadow-sm">
+                            <strong class="text-amber-900 block mb-1 font-extrabold"><i class="fas fa-hands-helping mr-1"></i> 3. Red de Apoyo Comunitario</strong>
+                            Comprende maestros, directores, centros de salud y vecinos organizados que actúan como primeros alertadores ante cualquier peligro.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Ejercicios de Casos Prácticos con Acordeones -->
+                <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-4 sm:p-5 space-y-4">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                        <h3 class="font-extrabold text-montano-blue text-lg">
+                            <i class="fas fa-edit mr-2"></i> Análisis Individual de Casos (Resuelve en tu cuaderno y autoevalúate)
+                        </h3>
+                        <span class="text-xs font-semibold text-slate-500">Haz clic en el botón de cada caso para verificar la orientación institucional.</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Ejercicio 1 -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-300 shadow-sm flex flex-col justify-between gap-3">
+                            <p class="text-xs sm:text-sm text-slate-800">
+                                <span class="bg-montano-blue text-white font-bold px-2 py-0.5 rounded mr-1">Caso 1 • Riesgo Social</span>
+                                Un grupo de maestros descubre que una alumna de primaria sufre constantes maltratos físicos en su hogar y llega con signos de violencia. ¿Qué institución debe intervenir de urgencia para rescatar y proteger a la menor?
+                            </p>
+                            <div>
+                                <button onclick="toggleSolution('sol-ej1')" class="w-full py-2 px-3 bg-montano-green-gray hover:opacity-90 text-white text-xs font-bold rounded-lg transition flex items-center justify-center gap-2 cursor-pointer">
+                                    <i class="fas fa-lightbulb text-montano-yellow"></i> Ver orientación y respuesta esperada
+                                </button>
+                                <div id="sol-ej1" class="hidden mt-2 p-3 bg-emerald-50 border border-emerald-300 rounded-lg text-xs text-slate-800">
+                                    <strong>Respuesta Esperada:</strong> Debe intervenir la <strong>PGN (Procuraduría General de la Nación)</strong> y los Juzgados de Niñez, quienes dictan medidas urgentes de resguardo y protección integral.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ejercicio 2 -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-300 shadow-sm flex flex-col justify-between gap-3">
+                            <p class="text-xs sm:text-sm text-slate-800">
+                                <span class="bg-montano-blue text-white font-bold px-2 py-0.5 rounded mr-1">Caso 2 • Prevención Escolar</span>
+                                En la escuela se organiza una charla sobre cómo identificar personas extrañas que intentan engañar a los niños en redes sociales. ¿Por qué es importante la prevención antes de que ocurra un daño?
+                            </p>
+                            <div>
+                                <button onclick="toggleSolution('sol-ej2')" class="w-full py-2 px-3 bg-montano-green-gray hover:opacity-90 text-white text-xs font-bold rounded-lg transition flex items-center justify-center gap-2 cursor-pointer">
+                                    <i class="fas fa-lightbulb text-montano-yellow"></i> Ver orientación y respuesta esperada
+                                </button>
+                                <div id="sol-ej2" class="hidden mt-2 p-3 bg-emerald-50 border border-emerald-300 rounded-lg text-xs text-slate-800">
+                                    <strong>Respuesta Esperada:</strong> La prevención empodera a los niños para reconocer situaciones de peligro, aplicar el hábito Montano de <em>Poner primero lo primero</em> y alertar a tiempo a sus padres o maestros.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ejercicio 3 -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-300 shadow-sm flex flex-col justify-between gap-3">
+                            <p class="text-xs sm:text-sm text-slate-800">
+                                <span class="bg-montano-blue text-white font-bold px-2 py-0.5 rounded mr-1">Caso 3 • Abandono</span>
+                                Un menor es encontrado abandonado en la vía pública sin familiares que lo reclamen. ¿Cuál es el proceso legal que inicia el Estado para garantizarle un hogar seguro?
+                            </p>
+                            <div>
+                                <button onclick="toggleSolution('sol-ej3')" class="w-full py-2 px-3 bg-montano-green-gray hover:opacity-90 text-white text-xs font-bold rounded-lg transition flex items-center justify-center gap-2 cursor-pointer">
+                                    <i class="fas fa-lightbulb text-montano-yellow"></i> Ver orientación y respuesta esperada
+                                </button>
+                                <div id="sol-ej3" class="hidden mt-2 p-3 bg-emerald-50 border border-emerald-300 rounded-lg text-xs text-slate-800">
+                                    <strong>Respuesta Esperada:</strong> La PGN asume su resguardo temporal y el Juzgado de Niñez evalúa un hogar temporal o alternativas de protección familiar bajo la Ley PINA.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ejercicio 4 -->
+                        <div class="bg-white p-4 rounded-xl border border-slate-300 shadow-sm flex flex-col justify-between gap-3">
+                            <p class="text-xs sm:text-sm text-slate-800">
+                                <span class="bg-montano-blue text-white font-bold px-2 py-0.5 rounded mr-1">Caso 4 • Red Comunitaria</span>
+                                Si notas que un compañero falta mucho a clases y se le ve triste o desnutrido, ¿por qué los docentes y directores forman parte fundamental de la red de protección?
+                            </p>
+                            <div>
+                                <button onclick="toggleSolution('sol-ej4')" class="w-full py-2 px-3 bg-montano-green-gray hover:opacity-90 text-white text-xs font-bold rounded-lg transition flex items-center justify-center gap
